@@ -1,0 +1,26 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Buttons</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 20px; }
+  .row { display:flex; gap: 10px; align-items:center; flex-wrap: wrap; margin-bottom: 12px; }
+  .label { font-size: 11px; color: var(--fg-muted); font-family: var(--font-mono); width: 80px; }
+</style></head>
+<body>
+  <div class="row"><span class="label">primary</span>
+    <button class="btn btn-primary">Try Notion free</button>
+    <button class="btn btn-primary" style="background:var(--accent-hover)">Hover</button>
+    <button class="btn btn-primary" style="background:var(--accent-press)">Press</button>
+  </div>
+  <div class="row"><span class="label">secondary</span>
+    <button class="btn btn-secondary">Request a demo</button>
+    <button class="btn btn-secondary">Get started</button>
+  </div>
+  <div class="row"><span class="label">ghost</span>
+    <button class="btn btn-ghost">Log in</button>
+    <button class="btn btn-ghost">Pricing</button>
+  </div>
+  <div class="row"><span class="label">tinted</span>
+    <button class="btn" style="background:var(--bg-tinted-red);color:var(--accent-text);box-shadow:inset 0 0 0 1px var(--accent-soft), var(--shadow-1);width:240px">Continue with email</button>
+  </div>
+</body></html>

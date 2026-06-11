@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: leadmax
+      POSTGRES_USER: leadmax
+      POSTGRES_PASSWORD: leadmax_dev_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U leadmax"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Redis: using the local instance already running on :6379.
+  # Uncomment below if you need a Dockerized Redis on a different port.
+  # redis:
+  #   image: redis:7-alpine
+  #   ports:
+  #     - "6380:6379"
+  #   command: redis-server --appendonly yes
+
+volumes:
+  postgres_data:

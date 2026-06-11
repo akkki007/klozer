@@ -1,0 +1,29 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Page block</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 16px; }
+  .page { max-width: 540px; }
+  .title { font-size: 30px; font-weight: 700; color: var(--fg-display); display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .ico { font-size: 30px; line-height: 1; }
+  .block { padding: 3px 2px; font-size: 15px; line-height: 1.6; color: var(--fg); display:flex; gap:8px; }
+  .h-block { font-size: 18px; font-weight: 600; padding-top: 10px; }
+  .bullet { color: var(--fg); margin-right: 4px; }
+  .check { display:inline-flex; align-items:center; gap:8px; }
+  .cb { width: 14px; height: 14px; border-radius: 2px; border: 1.5px solid #888; flex: 0 0 14px; }
+  .done .cb { background: var(--blue); border-color: var(--blue); position:relative; }
+  .done .cb:after { content:"✓"; color:white; font-size:10px; position:absolute; left:1.5px; top:-2px; }
+  .done span { color: var(--fg-faint); text-decoration: line-through; }
+</style></head>
+<body>
+  <div class="page">
+    <div class="title"><span class="ico">📓</span>Q3 product launch</div>
+    <div class="block h-block">Goals</div>
+    <div class="block"><span class="bullet">•</span>Ship the new editor toolbar by Sept 10</div>
+    <div class="block"><span class="bullet">•</span>Migrate 80% of teams to AI Connectors</div>
+    <div class="block h-block">Tasks this week</div>
+    <div class="block check done"><span class="cb"></span><span>Write the launch brief</span></div>
+    <div class="block check"><span class="cb"></span><span>Review marketing copy with Sara</span></div>
+    <div class="block check"><span class="cb"></span><span>Schedule the all-hands demo</span></div>
+  </div>
+</body></html>

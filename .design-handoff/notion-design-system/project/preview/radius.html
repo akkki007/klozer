@@ -1,0 +1,20 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Radius</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 16px; }
+  .grid { display:flex; gap: 14px; align-items: flex-end; flex-wrap: wrap; }
+  .item { display:flex; flex-direction:column; gap:6px; align-items:center; }
+  .box { width: 64px; height: 64px; background: var(--bg-soft); border: 1px solid var(--border); }
+  .name { font-size: 11px; font-family: var(--font-mono); color: var(--fg-muted); }
+</style></head>
+<body>
+  <div class="grid">
+    <div class="item"><div class="box" style="border-radius:3px"></div><span class="name">3 · btn</span></div>
+    <div class="item"><div class="box" style="border-radius:4px"></div><span class="name">4 · sidebar</span></div>
+    <div class="item"><div class="box" style="border-radius:6px"></div><span class="name">6 · tooltip</span></div>
+    <div class="item"><div class="box" style="border-radius:8px"></div><span class="name">8 · card</span></div>
+    <div class="item"><div class="box" style="border-radius:12px"></div><span class="name">12 · feature</span></div>
+    <div class="item"><div class="box" style="border-radius:999px"></div><span class="name">pill</span></div>
+  </div>
+</body></html>

@@ -1,0 +1,27 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Colors — Block palette</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 14px; }
+  .grid { display:grid; grid-template-columns: repeat(5, 1fr); gap:8px; }
+  .swatch { display:flex; flex-direction:column; gap:4px; padding:8px; border-radius:4px; border:1px solid var(--border); }
+  .chip { height: 22px; border-radius: 3px; }
+  .row { display:flex; align-items:center; gap:6px; }
+  .name { font-size: 11px; font-weight:600; color:var(--fg); }
+  .hex  { font-size: 10px; font-family: var(--font-mono); color: var(--fg-muted); }
+</style></head>
+<body>
+  <div class="grid">
+    <div class="swatch"><div class="chip" style="background:#F1F1EF"></div><div class="row"><span class="name">Gray</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#F4EEEE"></div><div class="row"><span class="name">Brown</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#FAEBDD"></div><div class="row"><span class="name">Orange</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#FBF3DB"></div><div class="row"><span class="name">Yellow</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#DDEDEA"></div><div class="row"><span class="name">Green</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#DDEBF1"></div><div class="row"><span class="name">Blue</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#EAE4F2"></div><div class="row"><span class="name">Purple</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#F4DFEB"></div><div class="row"><span class="name">Pink</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#FBE4E4"></div><div class="row"><span class="name">Red</span></div></div>
+    <div class="swatch"><div class="chip" style="background:#FFFDFA;border:1px solid var(--border)"></div><div class="row"><span class="name">Default</span></div></div>
+  </div>
+  <div style="margin-top:10px;font-size:11px;color:var(--fg-muted);font-family:var(--font-mono);">Used for page backgrounds, callouts, and inline highlights inside the editor.</div>
+</body></html>

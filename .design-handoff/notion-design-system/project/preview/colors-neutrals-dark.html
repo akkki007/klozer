@@ -1,0 +1,24 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Colors — Neutrals (Dark)</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+</head>
+<body class="theme-dark">
+<style>
+  body { padding: 16px; }
+  .grid { display:grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .swatch { padding: 10px; border-radius: 6px; border: 1px solid var(--border); display:flex; flex-direction:column; gap:4px; background:var(--bg-soft); }
+  .name { font-size: 12px; font-weight: 600; color: var(--fg); }
+  .hex  { font-size: 11px; font-family: var(--font-mono); color: var(--fg-muted); }
+  .chip { width: 100%; height: 36px; border-radius: 4px; border: 1px solid var(--border); }
+</style>
+  <div class="grid">
+    <div class="swatch"><div class="chip" style="background:#191919"></div><span class="name">Canvas</span><span class="hex">#191919</span></div>
+    <div class="swatch"><div class="chip" style="background:#202020"></div><span class="name">Soft</span><span class="hex">#202020</span></div>
+    <div class="swatch"><div class="chip" style="background:#2F2F2F"></div><span class="name">Elevated</span><span class="hex">#2F2F2F</span></div>
+    <div class="swatch"><div class="chip" style="background:#E6E6E5"></div><span class="name">Body fg</span><span class="hex">#E6E6E5</span></div>
+    <div class="swatch"><div class="chip" style="background:#FFFFFF"></div><span class="name">Display fg</span><span class="hex">#FFFFFF</span></div>
+    <div class="swatch"><div class="chip" style="background:rgba(255,255,255,0.6)"></div><span class="name">Muted</span><span class="hex">255/.6</span></div>
+    <div class="swatch"><div class="chip" style="background:rgba(255,255,255,0.13)"></div><span class="name">Border</span><span class="hex">255/.13</span></div>
+    <div class="swatch"><div class="chip" style="background:#2A2A2A"></div><span class="name">Hairline</span><span class="hex">#2A2A2A</span></div>
+  </div>
+</body></html>

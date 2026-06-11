@@ -1,0 +1,23 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Slash command menu</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 16px; background: var(--bg); }
+  .menu { width: 320px; background: var(--bg-elevated); border-radius: 6px; box-shadow: var(--shadow-popover); padding: 6px; }
+  .group { font-size: 11px; color: var(--fg-muted); padding: 6px 8px 4px; }
+  .item { display:flex; gap:10px; align-items:center; padding: 6px 8px; border-radius: 3px; cursor: pointer; }
+  .item:hover, .active { background: var(--bg-hover); }
+  .ico { width: 36px; height: 36px; border-radius: 4px; background: var(--bg-soft); display:flex; align-items:center; justify-content:center; font-size: 18px; border: 1px solid var(--border); }
+  .name { font-size: 14px; color: var(--fg); }
+  .desc { font-size: 12px; color: var(--fg-muted); }
+  .meta { display:flex; flex-direction:column; gap:1px; }
+</style></head>
+<body>
+  <div class="menu">
+    <div class="group">BASIC BLOCKS</div>
+    <div class="item active"><div class="ico">📝</div><div class="meta"><span class="name">Text</span><span class="desc">Just start writing with plain text.</span></div></div>
+    <div class="item"><div class="ico">H1</div><div class="meta"><span class="name">Heading 1</span><span class="desc">Big section heading.</span></div></div>
+    <div class="item"><div class="ico">·</div><div class="meta"><span class="name">Bulleted list</span><span class="desc">Create a simple bulleted list.</span></div></div>
+    <div class="item"><div class="ico">☐</div><div class="meta"><span class="name">To-do list</span><span class="desc">Track tasks with a to-do list.</span></div></div>
+  </div>
+</body></html>

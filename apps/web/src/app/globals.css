@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Notion Design System tokens (light) ─────────────────────────── */
+:root {
+  --bg:            #FFFDFA;
+  --bg-soft:       #F9F5F1;
+  --bg-elevated:   #FFFFFF;
+  --bg-hover:      rgba(55,53,47,0.08);
+  --bg-active:     rgba(55,53,47,0.16);
+  --bg-tinted-red: #FDF5F2;
+
+  --fg:            #37352F;
+  --fg-display:    #040404;
+  --fg-muted:      rgba(55,53,47,0.65);
+  --fg-faint:      rgba(55,53,47,0.50);
+  --fg-onaccent:   #FFFFFF;
+
+  --border:        rgba(55,53,47,0.16);
+  --border-hairline: #EEEEED;
+
+  --accent:        #714B67;
+  --accent-hover:  #5F3F58;
+  --accent-soft:   rgba(113,75,103,0.30);
+  --accent-text:   #714B67;
+
+  --secondary:     #017E84;
+  --secondary-hover: #016A6F;
+
+  --radius-1: 3px;
+  --radius-2: 4px;
+  --radius-4: 8px;
+  --radius-5: 12px;
+
+  --shadow-1: 0 1px 2px 0 rgba(15,15,15,0.05);
+  --shadow-2: 0 1px 2px 0 rgba(15,15,15,0.10), 0 4px 8px 0 rgba(15,15,15,0.06);
+  --shadow-3: 0 0.667px 3.502px 0 rgba(0,0,0,0.008), 0 2.933px 7.252px 0 rgba(0,0,0,0.016), 0 7.200px 14.462px 0 rgba(0,0,0,0.020), 0 13.867px 28.348px 0 rgba(0,0,0,0.024), 0 23.333px 52.123px 0 rgba(0,0,0,0.030), 0 36px 89px 0 rgba(0,0,0,0.040);
+
+  --font-sans: 'Inter', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-display: 'Inter', ui-sans-serif, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+}
+
+/* ── Dark theme (landing page) ────────────────────────────────────── */
+.theme-dark, [data-theme="dark"] {
+  --bg:            #0F0F0F;
+  --bg-soft:       #161616;
+  --bg-elevated:   #1E1E1E;
+  --bg-hover:      rgba(255,255,255,0.06);
+
+  --fg:            #E6E6E5;
+  --fg-display:    #FFFFFF;
+  --fg-muted:      rgba(255,255,255,0.55);
+  --fg-faint:      rgba(255,255,255,0.35);
+
+  --border:        rgba(255,255,255,0.10);
+  --border-hairline: rgba(255,255,255,0.08);
+
+  --accent:        #9B6B8A;
+  --accent-hover:  #B07EA0;
+  --accent-soft:   rgba(155,107,138,0.25);
+  --accent-text:   #C490B3;
+
+  --secondary:     #1AB8BE;
+  --secondary-hover: #22CDD4;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

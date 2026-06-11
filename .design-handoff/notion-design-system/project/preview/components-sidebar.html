@@ -1,0 +1,24 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Sidebar item</title>
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  body { padding: 16px; background: var(--bg-soft); }
+  .sb { width: 240px; display:flex; flex-direction:column; gap:1px; padding: 8px; background: var(--bg-soft); border-radius: 6px; }
+  .item { display:flex; align-items:center; gap:6px; padding: 4px 6px; height: 28px; border-radius: 3px; font-size: 14px; color: var(--fg); cursor: pointer; }
+  .item:hover { background: var(--bg-hover); }
+  .active { background: var(--bg-active); font-weight: 500; }
+  .ico { width: 18px; height: 18px; display:inline-flex; align-items:center; justify-content:center; font-size: 14px; }
+  .caret { width: 14px; color: var(--fg-faint); font-size: 9px; }
+  .sect { font-size: 11px; color: var(--fg-muted); padding: 12px 6px 4px; text-transform: none; font-weight: 500; }
+</style></head>
+<body>
+  <div class="sb">
+    <div class="sect">Workspace</div>
+    <div class="item"><span class="caret">▼</span><span class="ico">📄</span>Getting started</div>
+    <div class="item active"><span class="caret">▼</span><span class="ico">📚</span>Engineering wiki</div>
+    <div class="item" style="padding-left:22px"><span class="caret">▶</span><span class="ico">🛠</span>Onboarding</div>
+    <div class="item" style="padding-left:22px"><span class="ico">🧪</span>RFCs &amp; design docs</div>
+    <div class="item"><span class="caret">▶</span><span class="ico">📊</span>Q3 OKRs</div>
+    <div class="item"><span class="caret">▶</span><span class="ico">🗓</span>Meeting notes</div>
+  </div>
+</body></html>
