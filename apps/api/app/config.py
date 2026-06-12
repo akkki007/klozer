@@ -47,6 +47,14 @@ class Settings(BaseSettings):
     # OAuth redirect base (FastAPI server-side OAuth)
     OAUTH_REDIRECT_BASE: str = "http://localhost:8000/api/integrations"
 
+    # SMTP (credential delivery emails). Blank host = email is a no-op.
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM: str = ""
+    SMTP_USE_TLS: bool = True
+
 
 @lru_cache
 def get_settings() -> Settings:

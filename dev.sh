@@ -44,12 +44,17 @@ if [[ "$START_DB" == "1" ]]; then
 fi
 
 # ── 2. Backend (FastAPI / uvicorn) ──────────────────────────────────────────────
-if [[ ! -x "$API_DIR/.venv/bin/uvicorn" ]]; then
-  log "ERROR: $API_DIR/.venv/bin/uvicorn not found. Create the venv and install deps first."
+# Support both Unix (.venv/bin) and Windows (.venv/Scripts) venv layouts
+if [[ -x "$API_DIR/.venv/Scripts/uvicorn" ]]; then
+  UVICORN="$API_DIR/.venv/Scripts/uvicorn"
+elif [[ -x "$API_DIR/.venv/bin/uvicorn" ]]; then
+  UVICORN="$API_DIR/.venv/bin/uvicorn"
+else
+  log "ERROR: uvicorn not found in .venv. Create the venv and install deps first."
   exit 1
 fi
 log "starting API → http://localhost:$API_PORT  (docs: /docs)"
-( cd "$API_DIR" && exec .venv/bin/uvicorn app.main:app --reload --host "$API_HOST" --port "$API_PORT" ) \
+( cd "$API_DIR" && exec "$UVICORN" app.main:app --reload --host "$API_HOST" --port "$API_PORT" ) \
   2>&1 | prefix "${c_api}[api]${c_off} " &
 
 # ── 3. Frontend (Next.js) ───────────────────────────────────────────────────────

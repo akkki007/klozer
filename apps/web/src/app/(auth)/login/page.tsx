@@ -24,7 +24,7 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError("");
-    const result = await signIn("credentials", { email, password, redirect: false });
+    const result = await signIn("credentials", { identifier: email, password, redirect: false });
     setLoading(false);
     if (result?.error) {
       setError("Invalid email or password");
@@ -131,14 +131,14 @@ export default function LoginPage() {
             <form onSubmit={handleEmailSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               <div>
                 <label style={{ display: "block", fontSize: 12, color: "rgba(255,255,255,0.5)", marginBottom: 6, fontWeight: 500 }}>
-                  Email
+                  Email or Employee Code
                 </label>
                 <input
-                  type="email"
+                  type="text"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@company.com"
+                  placeholder="you@company.com or EMP code"
                   style={{
                     width: "100%", padding: "10px 14px", borderRadius: 7,
                     background: "rgba(255,255,255,0.05)",

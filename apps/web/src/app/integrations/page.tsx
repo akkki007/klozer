@@ -10,7 +10,7 @@ export default async function IntegrationsPage() {
   const firstName = (session.user?.name ?? "there").split(" ")[0];
 
   return (
-    <AppShell user={{ name: session.user?.name, role: session.user?.role }}>
+    <AppShell user={{ name: session.user?.name, role: session.user?.role }} token={session.accessToken}>
       <div style={{ maxWidth: 1080 }}>
         <SocialProfiles token={session.accessToken} firstName={firstName} />
       </div>

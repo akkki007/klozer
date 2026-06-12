@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import engine, Base
 import app.models  # noqa: F401 — ensure all models are imported before create_all
-from app.routers import auth, leads, integrations, webhooks
+from app.routers import auth, leads, integrations, webhooks, users, dashboard, audit, notifications
 
 
 @asynccontextmanager
@@ -33,6 +33,10 @@ app.add_middleware(
 )
 
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+app.include_router(users.router, prefix="/api/users", tags=["users"])
+app.include_router(dashboard.router, prefix="/api/dashboard", tags=["dashboard"])
+app.include_router(audit.router, prefix="/api/audit", tags=["audit"])
+app.include_router(notifications.router, prefix="/api/notifications", tags=["notifications"])
 app.include_router(leads.router, prefix="/api/leads", tags=["leads"])
 app.include_router(integrations.router, prefix="/api/integrations", tags=["integrations"])
 app.include_router(webhooks.router, prefix="/api/webhooks", tags=["webhooks"])

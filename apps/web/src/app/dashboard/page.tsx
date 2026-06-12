@@ -1,9 +1,10 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { FiZap, FiPhone, FiBell, FiShare2, FiArrowRight, FiCheckCircle } from "react-icons/fi";
+import { FiShare2, FiArrowRight, FiCheckCircle } from "react-icons/fi";
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
 import type { IconType } from "react-icons";
 import AppShell from "@/components/layout/AppShell";
+import DashboardCards from "./DashboardCards";
 
 async function apiGet(path: string, token: string) {
   try {
@@ -55,14 +56,8 @@ export default async function DashboardPage() {
 
   const profiles: Profile[] = (await apiGet("/api/integrations/profiles", session.accessToken)) ?? [];
 
-  const stats = [
-    { label: "Leads today", value: "—", Icon: FiZap, color: "#017E84" },
-    { label: "Calls logged", value: "—", Icon: FiPhone, color: "#714B67" },
-    { label: "Follow-ups due", value: "—", Icon: FiBell, color: "#F59E0B" },
-  ];
-
   return (
-    <AppShell user={{ name: session.user?.name, role: session.user?.role }}>
+    <AppShell user={{ name: session.user?.name, role: session.user?.role }} token={session.accessToken}>
       <div style={{ maxWidth: 1080 }}>
         <h1 style={{ fontSize: 24, fontWeight: 700, color: "var(--fg-display)", marginBottom: 6, letterSpacing: "-0.02em" }}>
           {greeting()}, {(session.user?.name ?? "there").split(" ")[0]}
@@ -71,38 +66,8 @@ export default async function DashboardPage() {
           Here&apos;s what&apos;s happening with your leads today.
         </p>
 
-        {/* Stat cards */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 28 }}>
-          {stats.map((card) => (
-            <div
-              key={card.label}
-              style={{
-                background: "var(--bg-elevated)",
-                borderRadius: "var(--radius-4)",
-                border: "1px solid var(--border-hairline)",
-                boxShadow: "var(--shadow-1)",
-                padding: "20px 22px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <div>
-                <p style={{ fontSize: 12, color: "var(--fg-faint)", marginBottom: 4, fontWeight: 500 }}>{card.label}</p>
-                <p style={{ fontSize: 28, fontWeight: 700, color: "var(--fg)" }}>{card.value}</p>
-              </div>
-              <div
-                style={{
-                  width: 40, height: 40, borderRadius: 10,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  background: `${card.color}15`, color: card.color,
-                }}
-              >
-                <card.Icon size={19} />
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* Role-aware stat cards */}
+        <DashboardCards token={session.accessToken} />
 
         {/* Connection state — synced with installed profiles */}
         {profiles.length === 0 ? (
