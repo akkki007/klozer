@@ -203,7 +203,7 @@ export const api = {
   integrations: {
     list: (token: string) => request("/api/integrations", { token }),
     connect: (token: string, provider: string) =>
-      request<{ auth_url?: string; method?: string }>(`/api/integrations/${provider}/connect`, { token }),
+      request<{ auth_url?: string; method?: string; app_id?: string; configuration_id?: string; state?: string }>(`/api/integrations/${provider}/connect`, { token }),
     assets: (token: string, provider: string) =>
       request<AssetDiscovery>(`/api/integrations/${provider}/assets`, { token }),
     install: (token: string, provider: string, assets: DiscoveredAsset[]) =>

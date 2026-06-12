@@ -1,7 +1,19 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+
+// FB JS SDK globals
+declare global {
+  interface Window {
+    FB: {
+      init(opts: object): void;
+      login(cb: (r: any) => void, opts: object): void;
+    };
+    fbAsyncInit?: () => void;
+  }
+}
+
 import {
   FaFacebookF,
   FaInstagram,
@@ -62,7 +74,23 @@ export default function SocialProfiles({
   const [loading, setLoading] = useState(true);
   const [connecting, setConnecting] = useState<string | null>(null);
   const [modalProvider, setModalProvider] = useState<string | null>(null);
+  const fbSdkLoaded = useRef(false);
   const router = useRouter();
+
+  // Load FB JS SDK once for WhatsApp Embedded Signup
+  useEffect(() => {
+    if (fbSdkLoaded.current || document.getElementById("facebook-jssdk")) {
+      fbSdkLoaded.current = true;
+      return;
+    }
+    const script = document.createElement("script");
+    script.id = "facebook-jssdk";
+    script.src = "https://connect.facebook.net/en_US/sdk.js";
+    script.async = true;
+    script.defer = true;
+    script.onload = () => { fbSdkLoaded.current = true; };
+    document.body.appendChild(script);
+  }, []);
 
   const refreshProfiles = useCallback(() => {
     return api.integrations.profiles(token).then(setProfiles);
@@ -78,6 +106,25 @@ export default function SocialProfiles({
       }),
     ]).finally(() => setLoading(false));
   }, [token, refreshProfiles]);
+
+  // Listen for WhatsApp Embedded Signup v4 session postMessage (WABA ID + phone IDs).
+  useEffect(() => {
+    function onFbMessage(e: MessageEvent) {
+      if (e.origin !== "https://www.facebook.com") return;
+      try {
+        const data = typeof e.data === "string" ? JSON.parse(e.data) : e.data;
+        if (data?.type === "WA_EMBEDDED_SIGNUP" && data?.event === "FINISH") {
+          // data.data contains phone_number_id and waba_id — logged for debugging;
+          // the actual token exchange happens in the FB.login callback via code.
+          console.debug("[WA Embedded Signup] session info:", data.data);
+        }
+      } catch {
+        // ignore non-JSON messages
+      }
+    }
+    window.addEventListener("message", onFbMessage);
+    return () => window.removeEventListener("message", onFbMessage);
+  }, []);
 
   // Listen for the OAuth popup bridge signalling completion.
   useEffect(() => {
@@ -114,6 +161,56 @@ export default function SocialProfiles({
     setConnecting(net.provider);
     try {
       const data = await api.integrations.connect(token, net.provider);
+
+      // WhatsApp Embedded Signup — uses FB JS SDK popup, not a redirect
+      if (data.method === "embedded_signup") {
+        if (!window.FB) {
+          alert("Facebook SDK not loaded yet. Please wait a moment and try again.");
+          setConnecting(null);
+          return;
+        }
+        window.FB.init({ appId: data.app_id, version: "v25.0" });
+        window.FB.login(
+          async (response: any) => {
+            const code = response?.authResponse?.code;
+            if (!code) {
+              setConnecting(null);
+              return;
+            }
+            try {
+              const res = await fetch(
+                `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/integrations/whatsapp/callback?state=${encodeURIComponent(data.state ?? "")}`,
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ code }),
+                }
+              );
+              if (res.ok) {
+                await refreshProfiles();
+              } else {
+                const err = await res.json().catch(() => ({}));
+                alert(`WhatsApp connection failed: ${err.detail ?? res.statusText}`);
+              }
+            } catch (e: any) {
+              alert(`WhatsApp connection failed: ${e.message ?? e}`);
+            }
+            setConnecting(null);
+          },
+          {
+            config_id: data.configuration_id,
+            response_type: "code",
+            override_default_response_type: true,
+            extras: {
+              setup: {},
+              featureType: "",
+              sessionInfoVersion: "3",
+            },
+          }
+        );
+        return;
+      }
+
       if (data.auth_url) {
         const w = 600;
         const h = 720;
@@ -125,11 +222,9 @@ export default function SocialProfiles({
           `width=${w},height=${h},left=${left},top=${top}`
         );
         if (!popup) {
-          // Popup blocked — fall back to a full-page redirect.
           window.location.href = data.auth_url;
         }
       } else {
-        alert("This network uses a different setup flow that isn't wired up here yet.");
         setConnecting(null);
       }
     } catch (err: any) {

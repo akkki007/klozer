@@ -101,7 +101,7 @@ class FacebookConnector(SocialConnector):
             return None
         params = {
             "client_id": settings.FB_APP_ID,
-            "redirect_uri": f"{settings.OAUTH_REDIRECT_BASE}/facebook/callback",
+            "redirect_uri": f"{settings.OAUTH_REDIRECT_BASE}/{self.provider}/callback",
             "state": state,
             "response_type": "code",
         }
@@ -396,7 +396,7 @@ class FacebookConnector(SocialConnector):
             params={
                 "client_id": settings.FB_APP_ID,
                 "client_secret": settings.FB_APP_SECRET,
-                "redirect_uri": f"{settings.OAUTH_REDIRECT_BASE}/facebook/callback",
+                "redirect_uri": f"{settings.OAUTH_REDIRECT_BASE}/{self.provider}/callback",
                 "code": code,
             },
         )
