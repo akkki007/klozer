@@ -63,11 +63,130 @@ async function request<T>(
   return res.json();
 }
 
+export type ManagedUser = {
+  id: string;
+  org_id: string;
+  manager_id: string | null;
+  full_name: string;
+  email: string | null;
+  mobile: string | null;
+  role: string;
+  status: string;
+  designation: string | null;
+  department: string | null;
+  employee_code: string | null;
+  must_change_password: boolean;
+  created_at: string | null;
+};
+
+export type Credentials = {
+  user_id: string;
+  full_name: string;
+  email: string | null;
+  employee_code: string | null;
+  temp_password: string;
+  email_sent: boolean;
+};
+
+export type OrgTreeNode = {
+  id: string;
+  full_name: string;
+  role: string;
+  designation: string | null;
+  department: string | null;
+  status: string;
+  children: OrgTreeNode[];
+};
+
+export type CreateUserBody = {
+  full_name: string;
+  email: string;
+  mobile?: string;
+  department?: string;
+  designation?: string;
+  address?: string;
+  joining_date?: string;
+  employee_code?: string;
+  notes?: string;
+  manager_id?: string;
+};
+
+export type DashboardData = { role: string; cards: Record<string, number> };
+
+export type NotificationItem = {
+  id: string;
+  type: string;
+  title: string;
+  body: string | null;
+  is_read: boolean;
+  created_at: string;
+};
+
+export type AuditEntry = {
+  id: string;
+  action: string;
+  actor: string | null;
+  target: string | null;
+  detail: Record<string, unknown> | null;
+  created_at: string;
+};
+
 export const api = {
   auth: {
     signup: (body: { org_name: string; name: string; email: string; password: string }) =>
       request("/api/auth/signup", { method: "POST", body: JSON.stringify(body) }),
     me: (token: string) => request("/api/auth/me", { token }),
+    changePassword: (token: string, body: { current_password: string; new_password: string }) =>
+      request<{ access_token: string; must_change_password: boolean }>(
+        "/api/auth/change-password",
+        { method: "POST", body: JSON.stringify(body), token }
+      ),
+  },
+  users: {
+    list: (token: string, params?: Record<string, string>) => {
+      const qs = params ? "?" + new URLSearchParams(params).toString() : "";
+      return request<ManagedUser[]>(`/api/users${qs}`, { token });
+    },
+    get: (token: string, id: string) => request<ManagedUser>(`/api/users/${id}`, { token }),
+    createHead: (token: string, body: CreateUserBody) =>
+      request<Credentials>("/api/users/heads", { method: "POST", body: JSON.stringify(body), token }),
+    createEmployee: (token: string, body: CreateUserBody) =>
+      request<Credentials>("/api/users/employees", { method: "POST", body: JSON.stringify(body), token }),
+    update: (token: string, id: string, body: Record<string, unknown>) =>
+      request<ManagedUser>(`/api/users/${id}`, { method: "PATCH", body: JSON.stringify(body), token }),
+    deactivate: (token: string, id: string) =>
+      request<ManagedUser>(`/api/users/${id}/deactivate`, { method: "POST", token }),
+    activate: (token: string, id: string) =>
+      request<ManagedUser>(`/api/users/${id}/activate`, { method: "POST", token }),
+    resetPassword: (token: string, id: string) =>
+      request<Credentials>(`/api/users/${id}/reset-password`, { method: "POST", token }),
+    changeManager: (token: string, id: string, manager_id: string | null) =>
+      request<ManagedUser>(`/api/users/${id}/manager`, {
+        method: "PATCH",
+        body: JSON.stringify({ manager_id }),
+        token,
+      }),
+    tree: (token: string) => request<OrgTreeNode[]>("/api/users/tree", { token }),
+  },
+  dashboard: {
+    get: (token: string) => request<DashboardData>("/api/dashboard", { token }),
+  },
+  notifications: {
+    list: (token: string, unreadOnly = false) =>
+      request<{ unread_count: number; items: NotificationItem[] }>(
+        `/api/notifications${unreadOnly ? "?unread_only=true" : ""}`,
+        { token }
+      ),
+    markRead: (token: string, id: string) =>
+      request(`/api/notifications/${id}/read`, { method: "POST", token }),
+    markAllRead: (token: string) =>
+      request("/api/notifications/read-all", { method: "POST", token }),
+  },
+  audit: {
+    list: (token: string, params?: Record<string, string>) => {
+      const qs = params ? "?" + new URLSearchParams(params).toString() : "";
+      return request<AuditEntry[]>(`/api/audit${qs}`, { token });
+    },
   },
   leads: {
     list: (token: string, params?: Record<string, string>) => {

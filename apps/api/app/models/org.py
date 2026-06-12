@@ -10,6 +10,7 @@ class Organization(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
+    company_code: Mapped[str | None] = mapped_column(String(32), unique=True, nullable=True)
     plan: Mapped[str] = mapped_column(String(50), default="trial")
     business_type: Mapped[str | None] = mapped_column(String(100), nullable=True)
     website: Mapped[str | None] = mapped_column(String(255), nullable=True)

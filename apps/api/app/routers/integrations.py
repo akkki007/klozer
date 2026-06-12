@@ -21,7 +21,7 @@ from sqlalchemy import select, and_
 
 from app.config import settings
 from app.database import get_db
-from app.dependencies import get_current_user, require_admin
+from app.dependencies import get_active_user, require_company_admin
 from app.models.user import User
 from app.models.integration import IntegrationCredential, IntegrationProvider, IntegrationStatus
 from app.connectors.registry import get_connector, all_connectors
@@ -116,7 +116,7 @@ async def _get_pending_user_token(db: AsyncSession, org_id: str, provider: str) 
 
 @router.get("", response_model=list[IntegrationStatusOut])
 async def list_integrations(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_active_user),
     db: AsyncSession = Depends(get_db),
 ):
     result = await db.execute(
@@ -153,7 +153,7 @@ async def list_integrations(
 @router.get("/{provider}/connect")
 async def connect_provider(
     provider: str,
-    current_user: User = Depends(require_admin),
+    current_user: User = Depends(require_company_admin),
 ):
     """Return the OAuth URL for the provider. Frontend handles the redirect."""
     connector = get_connector(provider)
@@ -220,7 +220,7 @@ async def oauth_callback(
 @router.get("/{provider}/assets", response_model=AssetDiscoveryOut)
 async def discover_assets(
     provider: str,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_active_user),
     db: AsyncSession = Depends(get_db),
 ):
     """Phase 2: list everything the granted token can access, for the user to pick from."""
@@ -245,7 +245,7 @@ async def discover_assets(
 async def install_assets(
     provider: str,
     body: InstallRequest,
-    current_user: User = Depends(require_admin),
+    current_user: User = Depends(require_company_admin),
     db: AsyncSession = Depends(get_db),
 ):
     """Phase 3: persist the chosen assets as active credentials."""
@@ -270,7 +270,7 @@ async def install_assets(
 
 @router.get("/profiles", response_model=list[InstalledProfileOut])
 async def list_profiles(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_active_user),
     db: AsyncSession = Depends(get_db),
 ):
     """All installed social profiles for the org (right-hand pane)."""
@@ -304,7 +304,7 @@ async def _list_profiles(db: AsyncSession, org_id) -> list[InstalledProfileOut]:
 @router.get("/profiles/{cred_id}", response_model=ProfileDetailOut)
 async def profile_detail(
     cred_id: str,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_active_user),
     db: AsyncSession = Depends(get_db),
 ):
     """Full info for one connected profile, plus a best-effort live fetch."""
@@ -358,7 +358,7 @@ async def profile_detail(
 @router.delete("/profiles/{cred_id}", status_code=204)
 async def disconnect_profile(
     cred_id: str,
-    current_user: User = Depends(require_admin),
+    current_user: User = Depends(require_company_admin),
     db: AsyncSession = Depends(get_db),
 ):
     """Disconnect a single installed profile by credential id."""
@@ -405,7 +405,7 @@ async def whatsapp_embedded_callback(
 @router.delete("/{provider}", status_code=204)
 async def disconnect_provider(
     provider: str,
-    current_user: User = Depends(require_admin),
+    current_user: User = Depends(require_company_admin),
     db: AsyncSession = Depends(get_db),
 ):
     result = await db.execute(
@@ -426,7 +426,7 @@ async def disconnect_provider(
 @router.post("/whatsapp/send", status_code=201)
 async def send_whatsapp(
     body: WhatsAppSendRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_active_user),
     db: AsyncSession = Depends(get_db),
 ):
     lead_result = await db.execute(

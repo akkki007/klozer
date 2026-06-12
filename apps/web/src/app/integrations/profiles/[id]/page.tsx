@@ -13,7 +13,7 @@ export default async function ProfileDetailPage({
   const { id } = await params;
 
   return (
-    <AppShell user={{ name: session.user?.name, role: session.user?.role }}>
+    <AppShell user={{ name: session.user?.name, role: session.user?.role }} token={session.accessToken}>
       <div style={{ maxWidth: 900 }}>
         <ProfileDetailView token={session.accessToken} id={id} />
       </div>

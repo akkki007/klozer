@@ -1,8 +1,12 @@
+import re
 from datetime import datetime, timedelta
-from typing import Any
+from typing import Any, TYPE_CHECKING
 import bcrypt
 from jose import JWTError, jwt
 from app.config import settings
+
+if TYPE_CHECKING:
+    from app.models.user import User
 
 
 def hash_password(password: str) -> str:
@@ -25,3 +29,34 @@ def decode_access_token(token: str) -> dict[str, Any]:
         return jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM])
     except JWTError as e:
         raise ValueError("Invalid or expired token") from e
+
+
+def build_token_claims(user: "User") -> dict[str, Any]:
+    """Standard JWT claims for a user. Includes tenant + hierarchy + the
+    forced-password-change flag so the frontend can gate access.
+    """
+    return {
+        "sub": str(user.id),
+        "company_id": str(user.org_id),
+        "org_id": str(user.org_id),
+        "role": user.role.value,
+        "manager_id": str(user.manager_id) if user.manager_id else None,
+        "must_change_password": user.must_change_password,
+    }
+
+
+class PasswordComplexityError(ValueError):
+    """Raised when a password fails complexity requirements."""
+
+
+def validate_password_complexity(password: str) -> str:
+    """Enforce: >= 8 chars, with lower, upper and a digit. Returns the password."""
+    if len(password) < 8:
+        raise PasswordComplexityError("Password must be at least 8 characters")
+    if not re.search(r"[a-z]", password):
+        raise PasswordComplexityError("Password must contain a lowercase letter")
+    if not re.search(r"[A-Z]", password):
+        raise PasswordComplexityError("Password must contain an uppercase letter")
+    if not re.search(r"\d", password):
+        raise PasswordComplexityError("Password must contain a digit")
+    return password

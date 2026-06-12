@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 export default auth((req) => {
   const { pathname } = req.nextUrl;
   const isLoggedIn = !!req.auth;
+  const mustChange = req.auth?.user?.mustChangePassword === true;
 
   const isPublic =
     pathname === "/" ||
@@ -16,6 +17,17 @@ export default auth((req) => {
   if (isLoggedIn && (pathname.startsWith("/login") || pathname.startsWith("/signup"))) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
+
+  // Mandatory password change: until cleared, the user can only reach
+  // /change-password (and sign-out). Everything else redirects there.
+  if (isLoggedIn && mustChange && !pathname.startsWith("/change-password")) {
+    return NextResponse.redirect(new URL("/change-password", req.url));
+  }
+  // Once cleared, don't let them sit on the change-password page.
+  if (isLoggedIn && !mustChange && pathname.startsWith("/change-password")) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+
   return NextResponse.next();
 });
 

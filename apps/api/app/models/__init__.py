@@ -6,6 +6,8 @@ from app.models.task import Task
 from app.models.deal import Deal, DealStage
 from app.models.integration import IntegrationCredential
 from app.models.engagement import MessageTemplate, FileAsset
+from app.models.audit import AuditLog, AuditAction
+from app.models.notification import Notification, NotificationType, EmployeeCodeCounter
 
 __all__ = [
     "Organization", "Team", "TeamMember",
@@ -16,4 +18,6 @@ __all__ = [
     "Deal", "DealStage",
     "IntegrationCredential",
     "MessageTemplate", "FileAsset",
+    "AuditLog", "AuditAction",
+    "Notification", "NotificationType", "EmployeeCodeCounter",
 ]

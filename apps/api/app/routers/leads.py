@@ -5,8 +5,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_
 
 from app.database import get_db
-from app.dependencies import get_current_user, require_any_role
-from app.models.user import User
+from app.dependencies import get_active_user, require_any_role, get_visible_user_ids
+from app.models.user import User, UserRole
 from app.models.lead import Lead, LeadCategory
 from app.models.activity import Activity, ActivityType
 from app.models.task import Task, TaskStatus
@@ -21,16 +21,23 @@ async def list_leads(
     owner_id: uuid.UUID | None = None,
     limit: int = Query(50, le=200),
     offset: int = 0,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_active_user),
     db: AsyncSession = Depends(get_db),
 ):
     filters = [Lead.org_id == current_user.org_id]
     if category:
         filters.append(Lead.category == category)
-    # Reps see only their own leads
-    if current_user.role.value == "rep":
+
+    # Hierarchy-scoped visibility:
+    #   employee -> own leads; head -> own + direct reports; admin -> whole company
+    if current_user.role == UserRole.employee:
         filters.append(Lead.owner_id == current_user.id)
-    elif owner_id:
+    elif current_user.role == UserRole.head:
+        visible_ids = await get_visible_user_ids(db, current_user)
+        filters.append(Lead.owner_id.in_(visible_ids))
+        if owner_id:
+            filters.append(Lead.owner_id == owner_id)
+    elif owner_id:  # company_admin optional filter
         filters.append(Lead.owner_id == owner_id)
 
     result = await db.execute(
@@ -42,7 +49,7 @@ async def list_leads(
 @router.post("", response_model=LeadOut, status_code=201)
 async def create_lead(
     body: LeadCreate,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_active_user),
     db: AsyncSession = Depends(get_db),
 ):
     lead = Lead(
@@ -60,7 +67,7 @@ async def create_lead(
 @router.get("/{lead_id}", response_model=LeadOut)
 async def get_lead(
     lead_id: uuid.UUID,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_active_user),
     db: AsyncSession = Depends(get_db),
 ):
     result = await db.execute(
@@ -76,7 +83,7 @@ async def get_lead(
 async def update_lead(
     lead_id: uuid.UUID,
     body: LeadUpdate,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_active_user),
     db: AsyncSession = Depends(get_db),
 ):
     result = await db.execute(
@@ -110,7 +117,7 @@ async def assign_lead(
 @router.get("/{lead_id}/activities")
 async def get_lead_activities(
     lead_id: uuid.UUID,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_active_user),
     db: AsyncSession = Depends(get_db),
 ):
     result = await db.execute(
@@ -136,7 +143,7 @@ async def get_lead_activities(
 @router.post("/activities", status_code=201)
 async def log_activity(
     body: ActivityCreate,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_active_user),
     db: AsyncSession = Depends(get_db),
 ):
     activity = Activity(
@@ -161,7 +168,7 @@ async def log_activity(
 @router.post("/tasks", status_code=201)
 async def create_task(
     body: TaskCreate,
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_active_user),
     db: AsyncSession = Depends(get_db),
 ):
     task = Task(
@@ -178,7 +185,7 @@ async def create_task(
 
 @router.get("/tasks/today")
 async def todays_tasks(
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_active_user),
     db: AsyncSession = Depends(get_db),
 ):
     from datetime import date

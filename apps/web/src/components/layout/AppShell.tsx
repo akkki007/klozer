@@ -7,22 +7,28 @@ import {
   FiGrid,
   FiShare2,
   FiUsers,
+  FiGitMerge,
+  FiFileText,
   FiBarChart2,
   FiSettings,
   FiLogOut,
 } from "react-icons/fi";
+import NotificationBell from "./NotificationBell";
 
 type NavItem = {
   label: string;
   href: string;
   Icon: IconType;
   enabled: boolean;
+  roles?: string[]; // when set, only these roles see the item
 };
 
 const NAV: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", Icon: FiGrid, enabled: true },
+  { label: "User Management", href: "/users", Icon: FiUsers, enabled: true, roles: ["company_admin", "head"] },
+  { label: "Organization", href: "/org", Icon: FiGitMerge, enabled: true, roles: ["company_admin", "head"] },
+  { label: "Audit Log", href: "/audit", Icon: FiFileText, enabled: true, roles: ["company_admin"] },
   { label: "Social Profiles", href: "/integrations", Icon: FiShare2, enabled: true },
-  { label: "Leads", href: "/leads", Icon: FiUsers, enabled: false },
   { label: "Analytics", href: "/analytics", Icon: FiBarChart2, enabled: false },
   { label: "Settings", href: "/settings", Icon: FiSettings, enabled: false },
 ];
@@ -41,13 +47,17 @@ function BrandMark() {
 
 export default function AppShell({
   user,
+  token,
   children,
 }: {
   user: { name?: string | null; role?: string | null };
+  token?: string;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
   const router = useRouter();
+  const role = user.role ?? "employee";
+  const navItems = NAV.filter((item) => !item.roles || item.roles.includes(role));
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg)", display: "flex" }}>
@@ -74,7 +84,7 @@ export default function AppShell({
         </div>
 
         <nav style={{ display: "flex", flexDirection: "column", gap: 2, flex: 1 }}>
-          {NAV.map((item) => {
+          {navItems.map((item) => {
             const active = pathname === item.href || pathname.startsWith(item.href + "/");
             return (
               <button
@@ -160,6 +170,7 @@ export default function AppShell({
             zIndex: 30,
           }}
         >
+          {token && <NotificationBell token={token} />}
           <span style={{ fontSize: 13, color: "var(--fg-muted)" }}>{user.name}</span>
           {user.role && (
             <span
