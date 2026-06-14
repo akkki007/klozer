@@ -1,54 +1,24 @@
 import Link from "next/link";
+import LandingNav from "./_components/LandingNav";
+import ThemeProvider from "./_components/ThemeProvider";
+import HyperText from "./_components/HyperText";
+import AvatarCircles from "./_components/AvatarCircles";
+import DotPattern from "./_components/DotPattern";
+import PlatformSnapshots from "./_components/PlatformSnapshots";
 
 export default function LandingPage() {
   return (
-    <div className="theme-dark" style={{ background: "var(--bg)", color: "var(--fg)", minHeight: "100vh", fontFamily: "var(--font-sans)" }}>
-      <Nav />
+    <ThemeProvider>
+      <LandingNav />
       <Hero />
       <LogoBar />
-      <Features />
       <HowItWorks />
+      <Features />
+      <Pricing />
       <Testimonials />
-      <CtaSection />
+      <Contact />
       <Footer />
-    </div>
-  );
-}
-
-function Nav() {
-  return (
-    <nav style={{
-      position: "sticky", top: 0, zIndex: 50,
-      background: "#0F0F0F",
-      borderBottom: "1px solid var(--border)",
-      padding: "0 40px", height: 60,
-      display: "flex", alignItems: "center", justifyContent: "space-between",
-    }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <LogoMark />
-        <span style={{ fontWeight: 700, fontSize: 17, color: "var(--fg-display)", letterSpacing: "-0.02em" }}>LeadMax</span>
-      </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 32, fontSize: 14, color: "var(--fg-muted)" }}>
-        <a href="#features" style={{ color: "var(--fg-muted)", textDecoration: "none" }}>Features</a>
-        <a href="#how" style={{ color: "var(--fg-muted)", textDecoration: "none" }}>How it works</a>
-        <a href="#pricing" style={{ color: "var(--fg-muted)", textDecoration: "none" }}>Pricing</a>
-      </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        <Link href="/login" style={{
-          fontSize: 14, color: "var(--fg-muted)", textDecoration: "none", padding: "6px 14px",
-          borderRadius: 6, border: "1px solid var(--border)"
-        }}>
-          Log in
-        </Link>
-        <Link href="/login" style={{
-          fontSize: 14, fontWeight: 600, color: "#fff", textDecoration: "none",
-          padding: "7px 18px", borderRadius: 6,
-          background: "#714B67",
-        }}>
-          Get started free
-        </Link>
-      </div>
-    </nav>
+    </ThemeProvider>
   );
 }
 
@@ -64,43 +34,66 @@ function LogoMark() {
 
 function Hero() {
   return (
-    <section style={{
-      padding: "120px 40px 100px",
+    <section id="home" style={{
+      padding: "196px 40px 100px",
       textAlign: "center",
+      position: "relative",
+      overflowX: "clip",
     }}>
-      <div style={{ maxWidth: 820, margin: "0 auto" }}>
+      <DotPattern />
+      <PlatformSnapshots />
+      <div style={{ maxWidth: 820, margin: "0 auto", position: "relative", zIndex: 1 }}>
         <div style={{
-          display: "inline-flex", alignItems: "center", gap: 8,
-          padding: "5px 14px", borderRadius: 999,
-          border: "1px solid var(--border)",
-          background: "rgba(255,255,255,0.04)",
-          fontSize: 12, fontWeight: 500, color: "#1AB8BE",
-          marginBottom: 32, letterSpacing: "0.04em"
+          fontSize: "clamp(13px, 1.4vw, 16px)",
+          fontWeight: 600,
+          color: "var(--accent-text)",
+          textTransform: "uppercase",
+          letterSpacing: "0.14em",
+          marginBottom: 22,
         }}>
-          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#1AB8BE", display: "inline-block" }} />
-          Built for India&apos;s field sales teams
+          Organize. Engage. Grow.
         </div>
 
-        <h1 style={{
-          fontSize: "clamp(48px, 7vw, 80px)", fontWeight: 700,
-          lineHeight: 1.05, letterSpacing: "-0.03em",
-          color: "#FFFFFF", marginBottom: 24,
+        <h1 className="font-machina" style={{
+          fontSize: "clamp(44px, 7vw, 76px)", fontWeight: 400,
+          lineHeight: 0.98, letterSpacing: "-0.03em",
+          color: "var(--fg-display)", marginBottom: 24, textAlign: "center",
         }}>
-          Close more deals.{" "}
-          <span style={{ color: "#C490B3" }}>
-            Lose fewer leads.
+          <span style={{ display: "block" }}>
+            Close more <HyperText hoverRupee>deals.</HyperText>
           </span>
+          <span style={{ display: "block", color: "var(--accent-text)" }}>Lose fewer <HyperText delay={250}>leads</HyperText>.</span>
         </h1>
 
         <p style={{
-          fontSize: 18, color: "var(--fg-muted)", maxWidth: 540, margin: "0 auto 40px",
+          fontSize: 18, color: "var(--fg-muted)", maxWidth: 540, margin: "0 auto 32px",
           lineHeight: 1.65
         }}>
           LeadMax captures leads from Facebook Ads, auto-assigns them to your team, and keeps every WhatsApp + call follow-up on track — all in one place.
         </p>
 
+        {/* Social proof */}
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "center",
+          gap: 12, flexWrap: "wrap", marginBottom: 32,
+        }}>
+          <AvatarCircles
+            numPeople={99}
+            avatarUrls={[
+              { imageUrl: "https://i.pravatar.cc/80?img=12" },
+              { imageUrl: "https://i.pravatar.cc/80?img=32" },
+              { imageUrl: "https://i.pravatar.cc/80?img=5" },
+              { imageUrl: "https://i.pravatar.cc/80?img=47" },
+              { imageUrl: "https://i.pravatar.cc/80?img=15" },
+            ]}
+          />
+          <span style={{ fontSize: 14, color: "var(--fg-muted)", fontWeight: 500 }}>
+            sales teams already closing with LeadMax
+          </span>
+        </div>
+
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-          <Link href="/login" style={{
+          <Link href="/login" className="fb-btn" style={{
             display: "inline-flex", alignItems: "center", gap: 8,
             padding: "13px 28px", borderRadius: 8,
             background: "#1877F2",
@@ -109,14 +102,17 @@ function Hero() {
             <FacebookIcon />
             Continue with Facebook
           </Link>
-          <a href="#how" style={{
+          <a href="#how" className="roll-btn" style={{
             display: "inline-flex", alignItems: "center",
             padding: "13px 28px", borderRadius: 8,
             border: "1px solid var(--border)",
-            background: "rgba(255,255,255,0.04)",
+            background: "var(--bg-hover)",
             color: "var(--fg)", fontWeight: 500, fontSize: 15, textDecoration: "none",
           }}>
-            See how it works →
+            <span className="nav-roll">
+              <span className="roll-front">See how it works →</span>
+              <span className="roll-back" aria-hidden>See how it works →</span>
+            </span>
           </a>
         </div>
 
@@ -131,6 +127,7 @@ function Hero() {
         borderRadius: 12, overflow: "hidden",
         border: "1px solid var(--border)",
         boxShadow: "0 32px 80px rgba(0,0,0,0.6)",
+        position: "relative", zIndex: 1,
       }}>
         <DashboardMockup />
       </div>
@@ -140,7 +137,7 @@ function Hero() {
 
 function FacebookIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
     </svg>
   );
@@ -243,7 +240,7 @@ function LogoBar() {
       padding: "40px 40px",
       borderTop: "1px solid var(--border)",
       borderBottom: "1px solid var(--border)",
-      background: "#161616",
+      background: "var(--bg-soft)",
     }}>
       <p style={{ textAlign: "center", fontSize: 12, color: "var(--fg-faint)", marginBottom: 24, letterSpacing: "0.08em", textTransform: "uppercase" }}>
         Trusted by sales teams across India
@@ -304,13 +301,13 @@ function Features() {
     <section id="features" style={{ padding: "100px 40px" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 64 }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: "#C490B3", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: "var(--accent-text)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>
             Everything you need
           </div>
           <h2 style={{
             fontSize: "clamp(32px, 5vw, 48px)", fontWeight: 700,
             lineHeight: 1.1, letterSpacing: "-0.025em",
-            color: "#FFFFFF", marginBottom: 16,
+            color: "var(--fg-display)", marginBottom: 16,
           }}>
             Built for teams that move fast
           </h2>
@@ -325,7 +322,7 @@ function Features() {
               padding: "28px 24px",
               borderRadius: 12,
               border: "1px solid var(--border)",
-              background: "#161616",
+              background: "var(--bg-soft)",
             }}>
               <div style={{
                 width: 38, height: 38, borderRadius: 8, marginBottom: 18,
@@ -335,7 +332,7 @@ function Features() {
               }}>
                 {item.icon}
               </div>
-              <div style={{ fontSize: 15, fontWeight: 600, color: "#FFFFFF", marginBottom: 8, letterSpacing: "-0.01em" }}>
+              <div style={{ fontSize: 15, fontWeight: 600, color: "var(--fg-display)", marginBottom: 8, letterSpacing: "-0.01em" }}>
                 {item.title}
               </div>
               <div style={{ fontSize: 13, color: "var(--fg-muted)", lineHeight: 1.6 }}>
@@ -369,13 +366,13 @@ function HowItWorks() {
   ];
 
   return (
-    <section id="how" style={{ padding: "100px 40px", background: "#161616" }}>
+    <section id="how" style={{ padding: "100px 40px", background: "var(--bg-soft)" }}>
       <div style={{ maxWidth: 900, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 64 }}>
-          <div style={{ fontSize: 12, fontWeight: 600, color: "#1AB8BE", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: "var(--secondary)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>
             How it works
           </div>
-          <h2 style={{ fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 700, letterSpacing: "-0.025em", color: "#FFFFFF" }}>
+          <h2 style={{ fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 700, letterSpacing: "-0.025em", color: "var(--fg-display)" }}>
             Up and running in 5 minutes
           </h2>
         </div>
@@ -386,7 +383,7 @@ function HowItWorks() {
               display: "grid", gridTemplateColumns: "80px 1fr",
               gap: 32, alignItems: "flex-start",
               padding: "32px 0",
-              borderBottom: i < steps.length - 1 ? "1px solid rgba(255,255,255,0.08)" : "none",
+              borderBottom: i < steps.length - 1 ? "1px solid var(--border)" : "none",
             }}>
               <div style={{
                 fontSize: 36, fontWeight: 800, lineHeight: 1,
@@ -396,7 +393,7 @@ function HowItWorks() {
                 {step.num}
               </div>
               <div>
-                <div style={{ fontSize: 18, fontWeight: 600, color: "#FFFFFF", marginBottom: 8, letterSpacing: "-0.01em" }}>
+                <div style={{ fontSize: 18, fontWeight: 600, color: "var(--fg-display)", marginBottom: 8, letterSpacing: "-0.01em" }}>
                   {step.title}
                 </div>
                 <div style={{ fontSize: 14, color: "var(--fg-muted)", lineHeight: 1.65 }}>
@@ -431,10 +428,10 @@ function Testimonials() {
   ];
 
   return (
-    <section style={{ padding: "100px 40px", background: "#0F0F0F" }}>
+    <section style={{ padding: "100px 40px", background: "var(--bg)" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 56 }}>
-          <h2 style={{ fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 700, letterSpacing: "-0.025em", color: "#FFFFFF" }}>
+          <h2 style={{ fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 700, letterSpacing: "-0.025em", color: "var(--fg-display)" }}>
             Teams love LeadMax
           </h2>
         </div>
@@ -444,11 +441,11 @@ function Testimonials() {
               padding: "28px 24px",
               borderRadius: 12,
               border: "1px solid var(--border)",
-              background: "#161616",
+              background: "var(--bg-soft)",
             }}>
               <div style={{ fontSize: 24, color: "#714B67", marginBottom: 16, lineHeight: 1 }}>&ldquo;</div>
               <p style={{ fontSize: 14, color: "var(--fg)", lineHeight: 1.65, marginBottom: 20 }}>{q.text}</p>
-              <div style={{ fontSize: 13, fontWeight: 600, color: "#FFFFFF" }}>{q.author}</div>
+              <div style={{ fontSize: 13, fontWeight: 600, color: "var(--fg-display)" }}>{q.author}</div>
               <div style={{ fontSize: 12, color: "var(--fg-muted)", marginTop: 2 }}>{q.role}</div>
             </div>
           ))}
@@ -458,34 +455,155 @@ function Testimonials() {
   );
 }
 
-function CtaSection() {
+function Pricing() {
+  const tiers = [
+    {
+      name: "Starter",
+      price: "Free",
+      note: "For solo reps getting started",
+      features: ["Up to 100 leads / mo", "1 Facebook Page", "Call & WhatsApp logging", "Email support"],
+      cta: "Start free",
+      highlight: false,
+    },
+    {
+      name: "Growth",
+      price: "₹1,999",
+      unit: "/mo",
+      note: "For growing sales teams",
+      features: ["Unlimited leads", "Up to 10 users", "Smart lead distribution", "Daily analytics", "Priority support"],
+      cta: "Start 30-day trial",
+      highlight: true,
+    },
+    {
+      name: "Scale",
+      price: "Custom",
+      note: "For large field-sales orgs",
+      features: ["Unlimited users", "Role hierarchy & audit logs", "Dedicated success manager", "Custom integrations"],
+      cta: "Talk to sales",
+      highlight: false,
+    },
+  ];
+
   return (
-    <section style={{ padding: "100px 40px", background: "#161616" }}>
+    <section id="pricing" style={{ padding: "100px 40px", scrollMarginTop: 88 }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <div style={{ textAlign: "center", marginBottom: 56 }}>
+          <div style={{ fontSize: 12, fontWeight: 600, color: "var(--accent-text)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>
+            Pricing
+          </div>
+          <h2 style={{ fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 700, letterSpacing: "-0.025em", color: "var(--fg-display)", marginBottom: 14 }}>
+            Simple, transparent pricing
+          </h2>
+          <p style={{ fontSize: 16, color: "var(--fg-muted)", maxWidth: 480, margin: "0 auto", lineHeight: 1.6 }}>
+            Start free, upgrade when your team grows. No setup fees, cancel anytime.
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 20, alignItems: "stretch" }}>
+          {tiers.map((t) => (
+            <div
+              key={t.name}
+              style={{
+                display: "flex", flexDirection: "column",
+                padding: "30px 26px", borderRadius: 16,
+                border: t.highlight ? "1px solid var(--tint-border)" : "1px solid var(--border)",
+                background: t.highlight ? "var(--bg-tint)" : "#161616",
+                boxShadow: t.highlight ? "0 20px 60px rgba(113,75,103,0.25)" : "none",
+                position: "relative",
+              }}
+            >
+              {t.highlight && (
+                <span style={{
+                  position: "absolute", top: 18, right: 20,
+                  fontSize: 11, fontWeight: 700, color: "var(--accent-text)",
+                  background: "rgba(196,144,179,0.12)", padding: "3px 10px", borderRadius: 999,
+                  letterSpacing: "0.04em",
+                }}>
+                  POPULAR
+                </span>
+              )}
+              <div style={{ fontSize: 14, fontWeight: 600, color: "#fff", marginBottom: 6 }}>{t.name}</div>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 6 }}>
+                <span style={{ fontSize: 34, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>{t.price}</span>
+                {t.unit && <span style={{ fontSize: 14, color: "var(--fg-faint)" }}>{t.unit}</span>}
+              </div>
+              <div style={{ fontSize: 13, color: "var(--fg-muted)", marginBottom: 22 }}>{t.note}</div>
+              <ul style={{ listStyle: "none", padding: 0, margin: "0 0 26px", display: "flex", flexDirection: "column", gap: 11, flex: 1 }}>
+                {t.features.map((f) => (
+                  <li key={f} style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 13.5, color: "var(--fg)" }}>
+                    <CheckIcon />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/login"
+                style={{
+                  display: "block", textAlign: "center", padding: "11px 20px", borderRadius: 8,
+                  fontWeight: 600, fontSize: 14, textDecoration: "none",
+                  background: t.highlight ? "#714B67" : "transparent",
+                  color: t.highlight ? "#fff" : "var(--fg)",
+                  border: t.highlight ? "1px solid #714B67" : "1px solid var(--border)",
+                }}
+              >
+                {t.cta}
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+      <circle cx="12" cy="12" r="11" fill="rgba(26,184,190,0.15)" />
+      <path d="M7.5 12.5L10.5 15.5L16.5 9" stroke="#1AB8BE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function Contact() {
+  return (
+    <section id="contact" style={{ padding: "100px 40px", background: "var(--bg-soft)", scrollMarginTop: 88 }}>
       <div style={{
-        maxWidth: 700, margin: "0 auto", textAlign: "center",
+        maxWidth: 720, margin: "0 auto", textAlign: "center",
         padding: "60px 40px",
         borderRadius: 16,
-        border: "1px solid rgba(113,75,103,0.4)",
-        background: "#1A1117",
+        border: "1px solid var(--tint-border)",
+        background: "var(--bg-tint)",
       }}>
+        <div style={{ fontSize: 12, fontWeight: 600, color: "var(--secondary)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>
+          Get in contact
+        </div>
         <h2 style={{
           fontSize: "clamp(28px, 4vw, 44px)", fontWeight: 700,
-          letterSpacing: "-0.025em", color: "#FFFFFF", marginBottom: 16,
+          letterSpacing: "-0.025em", color: "var(--fg-display)", marginBottom: 16,
         }}>
-          Start closing deals today
+          Let&apos;s get your team set up
         </h2>
         <p style={{ fontSize: 15, color: "var(--fg-muted)", marginBottom: 36, lineHeight: 1.65 }}>
-          Connect your Facebook Page, invite your team, and watch leads flow in automatically. No setup fee, no contracts.
+          Connect your Facebook Page, invite your team, and watch leads flow in automatically — or talk to us and we&apos;ll help you onboard.
         </p>
-        <Link href="/login" style={{
-          display: "inline-flex", alignItems: "center", gap: 8,
-          padding: "13px 32px", borderRadius: 8,
-          background: "#1877F2",
-          color: "#fff", fontWeight: 600, fontSize: 15, textDecoration: "none",
-        }}>
-          <FacebookIcon />
-          Get started with Facebook
-        </Link>
+        <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+          <Link href="/login" style={{
+            display: "inline-flex", alignItems: "center", gap: 8,
+            padding: "13px 28px", borderRadius: 8,
+            background: "#714B67", color: "#fff", fontWeight: 600, fontSize: 15, textDecoration: "none",
+          }}>
+            Get started free
+          </Link>
+          <a href="mailto:hello@leadmax.app" style={{
+            display: "inline-flex", alignItems: "center", gap: 8,
+            padding: "13px 28px", borderRadius: 8,
+            border: "1px solid var(--border)", background: "var(--bg-hover)",
+            color: "var(--fg)", fontWeight: 500, fontSize: 15, textDecoration: "none",
+          }}>
+            Email our team →
+          </a>
+        </div>
         <p style={{ fontSize: 12, color: "var(--fg-faint)", marginTop: 16 }}>
           Free for your first 30 days · No credit card needed
         </p>
@@ -499,12 +617,12 @@ function Footer() {
     <footer style={{
       borderTop: "1px solid var(--border-hairline)",
       padding: "40px",
-      background: "#0F0F0F",
+      background: "var(--bg)",
       display: "flex", alignItems: "center", justifyContent: "space-between",
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
         <LogoMark />
-        <span style={{ fontSize: 14, fontWeight: 600, color: "#FFFFFF" }}>LeadMax</span>
+        <span style={{ fontSize: 14, fontWeight: 600, color: "var(--fg-display)" }}>LeadMax</span>
       </div>
       <div style={{ display: "flex", gap: 24, fontSize: 13, color: "var(--fg-muted)" }}>
         <a href="#" style={{ color: "var(--fg-muted)", textDecoration: "none" }}>Privacy</a>

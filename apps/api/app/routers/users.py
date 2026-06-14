@@ -190,12 +190,18 @@ async def _get_user_in_scope(db: AsyncSession, actor: User, user_id: uuid.UUID) 
 
 @router.get("/tree", response_model=list[TreeNode])
 async def org_tree(
-    actor: User = Depends(require_head_or_admin),
+    actor: User = Depends(get_active_user),
     db: AsyncSession = Depends(get_db),
 ):
-    """Hierarchy tree. Admin sees the whole company; head sees their subtree."""
+    """Role-scoped hierarchy tree.
+
+    - company_admin: the whole company
+    - head: their own subtree (self + reports)
+    - employee: their head + co-workers (themselves marked client-side)
+    """
     result = await db.execute(select(User).where(User.org_id == actor.org_id))
     users = list(result.scalars().all())
+    by_id = {u.id: u for u in users}
 
     children: dict[uuid.UUID | None, list[User]] = {}
     for u in users:
@@ -206,6 +212,7 @@ async def org_tree(
             id=u.id,
             full_name=u.name,
             role=u.role.value,
+            employee_code=u.employee_code,
             designation=u.designation,
             department=u.department,
             status=u.status.value,
@@ -214,8 +221,14 @@ async def org_tree(
 
     if actor.role == UserRole.head:
         return [build(actor)]
+
+    if actor.role == UserRole.employee:
+        # Root at the employee's manager so siblings (co-workers) are visible.
+        manager = by_id.get(actor.manager_id) if actor.manager_id else None
+        return [build(manager)] if manager else [build(actor)]
+
     # Admin: roots are users with no manager (or whose manager is outside the set).
-    ids = {u.id for u in users}
+    ids = set(by_id)
     roots = [u for u in users if u.manager_id is None or u.manager_id not in ids]
     return [build(r) for r in roots]
 

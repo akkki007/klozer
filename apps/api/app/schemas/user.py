@@ -70,6 +70,7 @@ class TreeNode(BaseModel):
     id: uuid.UUID
     full_name: str
     role: str
+    employee_code: str | None = None
     designation: str | None = None
     department: str | None = None
     status: str
