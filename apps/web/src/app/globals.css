@@ -1,17 +1,44 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ── Neue Machina (display) ───────────────────────────────────────────────────
+   Paid Pangram Pangram font — place the .woff2 files in apps/web/public/fonts/.
+   Until present, `font-machina` falls back to Sora (see tailwind.config.ts). */
+@font-face {
+  font-family: "Neue Machina";
+  src: url("/fonts/NeueMachina-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Neue Machina";
+  src: url("/fonts/NeueMachina-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Neue Machina";
+  src: url("/fonts/NeueMachina-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ── Notion Design System tokens (light) ─────────────────────────── */
-:root {
+:root, .theme-light {
   --bg:            #FFFDFA;
   --bg-soft:       #F9F5F1;
   --bg-elevated:   #FFFFFF;
   --bg-hover:      rgba(55,53,47,0.08);
   --bg-active:     rgba(55,53,47,0.16);
   --bg-tinted-red: #FDF5F2;
+  --bg-tint:       #FAF3F8;
+  --tint-border:   rgba(113,75,103,0.22);
 
   --fg:            #37352F;
   --fg-display:    #040404;
@@ -49,6 +76,8 @@
   --bg-soft:       #161616;
   --bg-elevated:   #1E1E1E;
   --bg-hover:      rgba(255,255,255,0.06);
+  --bg-tint:       #1A1117;
+  --tint-border:   rgba(113,75,103,0.40);
 
   --fg:            #E6E6E5;
   --fg-display:    #FFFFFF;
@@ -73,4 +102,56 @@ html, body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth in-page anchor scrolling; offset so section tops clear the fixed nav. */
+html {
+  scroll-behavior: smooth;
+}
+section[id] {
+  scroll-margin-top: 88px;
+}
+
+/* Landing nav "roll-up" hover: the label slides up and out while an identical
+   copy in the accent (#C490B3) rolls into its place. */
+.nav-roll {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  vertical-align: top;
+  line-height: 1.2;
+}
+.nav-roll > span {
+  display: block;
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.nav-roll > .roll-back {
+  position: absolute;
+  inset: 0;
+  transform: translateY(110%);
+  color: #c490b3;
+}
+.nav-link:hover .roll-front,
+.roll-btn:hover .roll-front {
+  transform: translateY(-110%);
+}
+.nav-link:hover .roll-back,
+.roll-btn:hover .roll-back {
+  transform: translateY(0);
+}
+
+/* Hero "Continue with Facebook" button: invert to grey bg / blue text+icon. */
+.fb-btn {
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.fb-btn:hover {
+  background: #E4E6EB !important;
+  color: #1877F2 !important;
+}
+
+/* Gentle bob for the hero's floating platform snapshots. */
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-12px); }
 }

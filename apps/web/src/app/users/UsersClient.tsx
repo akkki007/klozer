@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { api, type ManagedUser, type Credentials } from "@/lib/api-client";
 import CreateUserForm from "./CreateUserForm";
 import CredentialModal from "./CredentialModal";
+import OrgChart from "./OrgChart";
 
 const ROLE_LABEL: Record<string, string> = {
   company_admin: "Company Admin",
@@ -11,8 +12,17 @@ const ROLE_LABEL: Record<string, string> = {
   employee: "Employee",
 };
 
-export default function UsersClient({ token, role }: { token: string; role: string }) {
+export default function UsersClient({
+  token,
+  role,
+  currentUserId,
+}: {
+  token: string;
+  role: string;
+  currentUserId?: string;
+}) {
   const isAdmin = role === "company_admin";
+  const [view, setView] = useState<"table" | "chart">("table");
   const [users, setUsers] = useState<ManagedUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -88,7 +98,39 @@ export default function UsersClient({ token, role }: { token: string; role: stri
             {isAdmin ? "Manage heads and employees across your company." : "Manage your team."}
           </p>
         </div>
-        <div style={{ display: "flex", gap: 10 }}>
+        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+          {/* View toggle */}
+          <div
+            style={{
+              display: "inline-flex",
+              padding: 3,
+              gap: 2,
+              background: "var(--bg-soft, #f1efec)",
+              border: "1px solid var(--border-hairline)",
+              borderRadius: "var(--radius-2)",
+            }}
+          >
+            {(["table", "chart"] as const).map((v) => (
+              <button
+                key={v}
+                onClick={() => setView(v)}
+                style={{
+                  padding: "6px 14px",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  borderRadius: "var(--radius-1)",
+                  border: "none",
+                  cursor: "pointer",
+                  textTransform: "capitalize",
+                  background: view === v ? "var(--bg-elevated)" : "transparent",
+                  color: view === v ? "var(--fg)" : "var(--fg-faint)",
+                  boxShadow: view === v ? "var(--shadow-1)" : "none",
+                }}
+              >
+                {v === "chart" ? "Org chart" : "Table"}
+              </button>
+            ))}
+          </div>
           {isAdmin && (
             <button onClick={() => setCreating("head")} style={btnPrimary}>
               + Add Head
@@ -100,6 +142,12 @@ export default function UsersClient({ token, role }: { token: string; role: stri
         </div>
       </div>
 
+      {error && <p style={{ color: "#dc2626", fontSize: 13, marginBottom: 12 }}>{error}</p>}
+
+      {view === "chart" ? (
+        <OrgChart token={token} currentUserId={currentUserId} />
+      ) : (
+      <>
       <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
         <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} style={filterStyle}>
           <option value="">All roles</option>
@@ -113,8 +161,6 @@ export default function UsersClient({ token, role }: { token: string; role: stri
           <option value="inactive">Inactive</option>
         </select>
       </div>
-
-      {error && <p style={{ color: "#dc2626", fontSize: 13, marginBottom: 12 }}>{error}</p>}
 
       <div
         style={{
@@ -205,6 +251,8 @@ export default function UsersClient({ token, role }: { token: string; role: stri
           </tbody>
         </table>
       </div>
+      </>
+      )}
 
       {creating && (
         <CreateUserForm

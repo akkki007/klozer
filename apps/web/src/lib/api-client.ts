@@ -92,6 +92,7 @@ export type OrgTreeNode = {
   id: string;
   full_name: string;
   role: string;
+  employee_code: string | null;
   designation: string | null;
   department: string | null;
   status: string;

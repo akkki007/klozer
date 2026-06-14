@@ -26,7 +26,7 @@ type NavItem = {
 const NAV: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", Icon: FiGrid, enabled: true },
   { label: "User Management", href: "/users", Icon: FiUsers, enabled: true, roles: ["company_admin", "head"] },
-  { label: "Organization", href: "/org", Icon: FiGitMerge, enabled: true, roles: ["company_admin", "head"] },
+  { label: "Organization", href: "/org", Icon: FiGitMerge, enabled: true },
   { label: "Audit Log", href: "/audit", Icon: FiFileText, enabled: true, roles: ["company_admin"] },
   { label: "Social Profiles", href: "/integrations", Icon: FiShare2, enabled: true },
   { label: "Analytics", href: "/analytics", Icon: FiBarChart2, enabled: false },
