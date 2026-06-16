@@ -143,6 +143,34 @@ export type WaMessage = {
   created_at: string | null;
 };
 
+export type LinkedInOrg = {
+  urn: string;
+  id: string;
+  name: string;
+  website: string | null;
+  logo: string | null;
+  industry: string | null;
+  followers: number | null;
+};
+
+export type LinkedInStatus = {
+  configured: boolean;
+  connected: boolean;
+  organization: LinkedInOrg | null;
+  lead_count: number;
+};
+
+export type LinkedInAnalytics = {
+  totals: {
+    impressions: number; clicks: number; ctr: number;
+    cpc: number; cpl: number; leads: number; spend: number;
+  };
+  campaigns: Array<{
+    campaign_id: number; name: string; impressions: number; clicks: number;
+    ctr: number; cpc: number; cpl: number; leads: number;
+  }>;
+};
+
 export type WaConnection = {
   connected: boolean;
   phone: string | null;
@@ -243,6 +271,18 @@ export const api = {
         body: JSON.stringify(body),
         token,
       }),
+  },
+  linkedin: {
+    status: (token: string) => request<LinkedInStatus>("/api/linkedin/status", { token }),
+    organizations: (token: string) =>
+      request<LinkedInOrg[]>("/api/linkedin/organizations", { token }),
+    selectOrganization: (token: string, org: LinkedInOrg) =>
+      request<LinkedInStatus>("/api/linkedin/select-organization", {
+        method: "POST", body: JSON.stringify(org), token,
+      }),
+    sync: (token: string) =>
+      request<{ synced: number; seen: number }>("/api/linkedin/sync", { method: "POST", token }),
+    analytics: (token: string) => request<LinkedInAnalytics>("/api/linkedin/analytics", { token }),
   },
   integrations: {
     list: (token: string) => request("/api/integrations", { token }),

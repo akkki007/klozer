@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import engine, Base
 import app.models  # noqa: F401 — ensure all models are imported before create_all
-from app.routers import auth, leads, integrations, webhooks, users, dashboard, audit, notifications, whatsapp
+from app.routers import auth, leads, integrations, webhooks, users, dashboard, audit, notifications, whatsapp, linkedin
 
 
 @asynccontextmanager
@@ -41,6 +41,7 @@ app.include_router(leads.router, prefix="/api/leads", tags=["leads"])
 app.include_router(integrations.router, prefix="/api/integrations", tags=["integrations"])
 app.include_router(webhooks.router, prefix="/api/webhooks", tags=["webhooks"])
 app.include_router(whatsapp.router, prefix="/api/whatsapp", tags=["whatsapp"])
+app.include_router(linkedin.router, prefix="/api/linkedin", tags=["linkedin"])
 
 
 @app.get("/health")

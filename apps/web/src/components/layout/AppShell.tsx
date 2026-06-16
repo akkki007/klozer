@@ -13,6 +13,7 @@ import {
   FiSettings,
   FiLogOut,
   FiMessageCircle,
+  FiLinkedin,
 } from "react-icons/fi";
 import NotificationBell from "./NotificationBell";
 
@@ -31,6 +32,7 @@ const NAV: NavItem[] = [
   { label: "Audit Log", href: "/audit", Icon: FiFileText, enabled: true, roles: ["company_admin"] },
   { label: "Social Profiles", href: "/integrations", Icon: FiShare2, enabled: true },
   { label: "WhatsApp", href: "/whatsapp", Icon: FiMessageCircle, enabled: true },
+  { label: "LinkedIn", href: "/linkedin", Icon: FiLinkedin, enabled: true },
   { label: "Analytics", href: "/analytics", Icon: FiBarChart2, enabled: false },
   { label: "Settings", href: "/settings", Icon: FiSettings, enabled: false },
 ];
