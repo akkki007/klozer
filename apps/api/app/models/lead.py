@@ -72,6 +72,8 @@ class Lead(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     last_engaged_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    # WhatsApp inbox read marker — inbound messages newer than this count as unread.
+    wa_last_read_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
 
     source: Mapped["LeadSource | None"] = relationship("LeadSource", back_populates="leads")
     activities: Mapped[list["Activity"]] = relationship("Activity", back_populates="lead", order_by="Activity.created_at.desc()")

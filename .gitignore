@@ -37,3 +37,6 @@ Thumbs.db
 *.key
 # Added by code-review-graph
 .code-review-graph/
+
+# Local dev tunnel binary (cloudflared) — not part of the project
+.tools/

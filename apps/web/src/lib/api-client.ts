@@ -123,6 +123,33 @@ export type NotificationItem = {
   created_at: string;
 };
 
+export type WaConversation = {
+  lead_id: string;
+  name: string;
+  phone: string | null;
+  last_message: string | null;
+  last_message_at: string | null;
+  last_direction: string | null;
+  unread: number;
+  total: number;
+};
+
+export type WaMessage = {
+  id: string;
+  direction: string; // "in" | "out"
+  body: string | null;
+  wa_type: string;
+  status: string | null;
+  created_at: string | null;
+};
+
+export type WaConnection = {
+  connected: boolean;
+  phone: string | null;
+  phone_number_id: string | null;
+  name: string | null;
+};
+
 export type AuditEntry = {
   id: string;
   action: string;
@@ -200,6 +227,22 @@ export const api = {
     update: (token: string, id: string, body: Record<string, unknown>) =>
       request(`/api/leads/${id}`, { method: "PATCH", body: JSON.stringify(body), token }),
     todayTasks: (token: string) => request("/api/leads/tasks/today", { token }),
+  },
+  whatsapp: {
+    conversations: (token: string) =>
+      request<WaConversation[]>("/api/whatsapp/conversations", { token }),
+    messages: (token: string, leadId: string) =>
+      request<WaMessage[]>(`/api/whatsapp/conversations/${leadId}`, { token }),
+    markRead: (token: string, leadId: string) =>
+      request(`/api/whatsapp/conversations/${leadId}/read`, { method: "POST", token }),
+    connection: (token: string) =>
+      request<WaConnection>("/api/whatsapp/connection", { token }),
+    connectManual: (token: string, body: { phone_number_id: string; access_token: string }) =>
+      request<WaConnection>("/api/whatsapp/connect-manual", {
+        method: "POST",
+        body: JSON.stringify(body),
+        token,
+      }),
   },
   integrations: {
     list: (token: string) => request("/api/integrations", { token }),

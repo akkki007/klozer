@@ -1,9 +1,24 @@
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+    # Credentials/URLs pasted into .env often carry a stray trailing space or
+    # newline. Such junk silently breaks OAuth (e.g. Facebook rejects a secret
+    # with a trailing char), so strip whitespace off these fields up front.
+    @field_validator(
+        "FB_APP_ID", "FB_APP_SECRET", "FB_SCOPES", "FB_LOGIN_CONFIG_ID",
+        "LINKEDIN_CLIENT_ID", "LINKEDIN_CLIENT_SECRET",
+        "JWT_SECRET", "TOKEN_ENC_KEY", "OAUTH_REDIRECT_BASE",
+        "FRONTEND_URL", "API_BASE_URL",
+        mode="before",
+    )
+    @classmethod
+    def _strip_whitespace(cls, v):
+        return v.strip() if isinstance(v, str) else v
 
     # App
     APP_ENV: str = "development"

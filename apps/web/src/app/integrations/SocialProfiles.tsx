@@ -107,6 +107,11 @@ export default function SocialProfiles({
 
   async function handleConnect(net: Network) {
     if (!net.functional) return;
+    // WhatsApp uses its own inbox page (manual connect), not the OAuth flow here.
+    if (net.provider === "whatsapp") {
+      router.push("/whatsapp");
+      return;
+    }
     if (configured[net.provider] === false) {
       alert("This network isn't configured on the server yet (missing API credentials).");
       return;

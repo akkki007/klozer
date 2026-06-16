@@ -1,33 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ── Neue Machina (display) ───────────────────────────────────────────────────
-   Paid Pangram Pangram font — place the .woff2 files in apps/web/public/fonts/.
-   Until present, `font-machina` falls back to Sora (see tailwind.config.ts). */
-@font-face {
-  font-family: "Neue Machina";
-  src: url("/fonts/NeueMachina-Regular.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Neue Machina";
-  src: url("/fonts/NeueMachina-Medium.woff2") format("woff2");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Neue Machina";
-  src: url("/fonts/NeueMachina-Bold.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
+/* Neue Machina (display heading) is self-hosted via next/font/local in
+   layout.tsx — see the `--font-machina` variable. */
 
 /* ── Notion Design System tokens (light) ─────────────────────────── */
 :root, .theme-light {
@@ -66,8 +42,8 @@
   --shadow-2: 0 1px 2px 0 rgba(15,15,15,0.10), 0 4px 8px 0 rgba(15,15,15,0.06);
   --shadow-3: 0 0.667px 3.502px 0 rgba(0,0,0,0.008), 0 2.933px 7.252px 0 rgba(0,0,0,0.016), 0 7.200px 14.462px 0 rgba(0,0,0,0.020), 0 13.867px 28.348px 0 rgba(0,0,0,0.024), 0 23.333px 52.123px 0 rgba(0,0,0,0.030), 0 36px 89px 0 rgba(0,0,0,0.040);
 
-  --font-sans: 'Inter', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-  --font-display: 'Inter', ui-sans-serif, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+  --font-sans: var(--font-inter), 'Inter', ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-display: var(--font-inter), 'Inter', ui-sans-serif, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
 }
 
 /* ── Dark theme (landing page) ────────────────────────────────────── */

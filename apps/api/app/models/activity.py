@@ -21,7 +21,8 @@ class Activity(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     lead_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("leads.id"), nullable=False, index=True)
-    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    # Nullable: inbound WhatsApp messages come from a customer, not a LeadMax user.
+    user_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     type: Mapped[ActivityType] = mapped_column(Enum(ActivityType), nullable=False)
     outcome: Mapped[str | None] = mapped_column(String(100), nullable=True)  # interested / callback / not_interested / etc.
     duration_sec: Mapped[int | None] = mapped_column(Integer, nullable=True)
