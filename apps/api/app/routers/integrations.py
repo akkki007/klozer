@@ -463,7 +463,7 @@ async def send_whatsapp(
         type=ActivityType.whatsapp,
         body=f"Template: {body.template_name}",
         external_id=msg_id,
-        meta_json={"template": body.template_name, "to": lead.phone},
+        meta_json={"direction": "out", "template": body.template_name, "to": lead.phone},
     )
     db.add(activity)
     return {"message_id": msg_id, "status": "sent"}

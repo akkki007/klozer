@@ -12,6 +12,9 @@ import {
   FiBarChart2,
   FiSettings,
   FiLogOut,
+  FiMessageCircle,
+  FiLinkedin,
+  FiUserCheck,
 } from "react-icons/fi";
 import NotificationBell from "./NotificationBell";
 
@@ -25,10 +28,13 @@ type NavItem = {
 
 const NAV: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", Icon: FiGrid, enabled: true },
+  { label: "Leads", href: "/leads", Icon: FiUserCheck, enabled: true },
   { label: "User Management", href: "/users", Icon: FiUsers, enabled: true, roles: ["company_admin", "head"] },
   { label: "Organization", href: "/org", Icon: FiGitMerge, enabled: true },
   { label: "Audit Log", href: "/audit", Icon: FiFileText, enabled: true, roles: ["company_admin"] },
   { label: "Social Profiles", href: "/integrations", Icon: FiShare2, enabled: true },
+  { label: "WhatsApp", href: "/whatsapp", Icon: FiMessageCircle, enabled: true },
+  { label: "LinkedIn", href: "/linkedin", Icon: FiLinkedin, enabled: true },
   { label: "Analytics", href: "/analytics", Icon: FiBarChart2, enabled: false },
   { label: "Settings", href: "/settings", Icon: FiSettings, enabled: false },
 ];
