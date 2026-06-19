@@ -14,6 +14,7 @@ import {
   FiLogOut,
   FiMessageCircle,
   FiLinkedin,
+  FiUserCheck,
 } from "react-icons/fi";
 import NotificationBell from "./NotificationBell";
 
@@ -27,6 +28,7 @@ type NavItem = {
 
 const NAV: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", Icon: FiGrid, enabled: true },
+  { label: "Leads", href: "/leads", Icon: FiUserCheck, enabled: true },
   { label: "User Management", href: "/users", Icon: FiUsers, enabled: true, roles: ["company_admin", "head"] },
   { label: "Organization", href: "/org", Icon: FiGitMerge, enabled: true },
   { label: "Audit Log", href: "/audit", Icon: FiFileText, enabled: true, roles: ["company_admin"] },

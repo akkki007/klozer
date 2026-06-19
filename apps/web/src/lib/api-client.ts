@@ -187,6 +187,35 @@ export type AuditEntry = {
   created_at: string;
 };
 
+export type LeadCategory =
+  | "fresh"
+  | "needs_followup"
+  | "uncontacted"
+  | "did_not_pick"
+  | "outcome_unknown";
+
+export type Lead = {
+  id: string;
+  org_id: string;
+  name: string;
+  phone: string | null;
+  email: string | null;
+  status: string;
+  category: LeadCategory;
+  owner_id: string | null;
+  created_at: string;
+  last_engaged_at: string | null;
+};
+
+export type LeadActivity = {
+  id: string;
+  type: string;
+  outcome: string | null;
+  body: string | null;
+  duration_sec: number | null;
+  created_at: string;
+};
+
 export const api = {
   auth: {
     signup: (body: { org_name: string; name: string; email: string; password: string }) =>
@@ -247,13 +276,21 @@ export const api = {
   leads: {
     list: (token: string, params?: Record<string, string>) => {
       const qs = params ? "?" + new URLSearchParams(params).toString() : "";
-      return request(`/api/leads${qs}`, { token });
+      return request<Lead[]>(`/api/leads${qs}`, { token });
     },
     create: (token: string, body: { name: string; phone?: string; email?: string }) =>
-      request("/api/leads", { method: "POST", body: JSON.stringify(body), token }),
-    get: (token: string, id: string) => request(`/api/leads/${id}`, { token }),
+      request<Lead>("/api/leads", { method: "POST", body: JSON.stringify(body), token }),
+    get: (token: string, id: string) => request<Lead>(`/api/leads/${id}`, { token }),
     update: (token: string, id: string, body: Record<string, unknown>) =>
-      request(`/api/leads/${id}`, { method: "PATCH", body: JSON.stringify(body), token }),
+      request<Lead>(`/api/leads/${id}`, { method: "PATCH", body: JSON.stringify(body), token }),
+    assign: (token: string, id: string, owner_id: string) =>
+      request(`/api/leads/${id}/assign`, { method: "POST", body: JSON.stringify({ owner_id }), token }),
+    activities: (token: string, id: string) =>
+      request<LeadActivity[]>(`/api/leads/${id}/activities`, { token }),
+    logActivity: (token: string, body: { lead_id: string; type: string; outcome?: string; duration_sec?: number; body?: string }) =>
+      request("/api/leads/activities", { method: "POST", body: JSON.stringify(body), token }),
+    createTask: (token: string, body: { lead_id: string; title: string; due_at?: string }) =>
+      request("/api/leads/tasks", { method: "POST", body: JSON.stringify(body), token }),
     todayTasks: (token: string) => request("/api/leads/tasks/today", { token }),
   },
   whatsapp: {
