@@ -36,11 +36,13 @@ LINKEDIN_AUTH_URL = "https://www.linkedin.com/oauth/v2/authorization"
 LINKEDIN_TOKEN_URL = "https://www.linkedin.com/oauth/v2/accessToken"
 API = "https://api.linkedin.com/rest"
 
-LINKEDIN_SCOPES = " ".join([
-    "r_marketing_leadgen_automation",  # Lead Sync API — lead gen form responses
-    "rw_ads",                          # Advertising API — campaigns + analytics
-    "r_organization_admin",            # Community Management API — org data
-])
+# Request only provisioned scopes (configurable via LINKEDIN_SCOPES). Default is
+# the approved Lead Sync scope; add rw_ads / r_organization_admin once those
+# products are approved.
+#   r_marketing_leadgen_automation -> Lead Sync API (lead gen form responses)
+#   rw_ads                         -> Advertising API (campaign analytics)
+#   r_organization_admin           -> Community Management API (org data)
+LINKEDIN_SCOPES = settings.LINKEDIN_SCOPES or "r_marketing_leadgen_automation"
 
 # LinkedIn lead-form predefined question names → our canonical lead fields.
 _FIELD_MAP = {

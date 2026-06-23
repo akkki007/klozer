@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     # with a trailing char), so strip whitespace off these fields up front.
     @field_validator(
         "FB_APP_ID", "FB_APP_SECRET", "FB_SCOPES", "FB_LOGIN_CONFIG_ID",
-        "LINKEDIN_CLIENT_ID", "LINKEDIN_CLIENT_SECRET",
+        "LINKEDIN_CLIENT_ID", "LINKEDIN_CLIENT_SECRET", "LINKEDIN_SCOPES",
         "JWT_SECRET", "TOKEN_ENC_KEY", "OAUTH_REDIRECT_BASE",
         "FRONTEND_URL", "API_BASE_URL",
         mode="before",
@@ -58,6 +58,10 @@ class Settings(BaseSettings):
     LINKEDIN_CLIENT_ID: str = ""
     LINKEDIN_CLIENT_SECRET: str = ""
     LINKEDIN_API_VERSION: str = "202602"
+    # Space-separated OAuth scopes — request ONLY the scopes whose products are
+    # provisioned, else LinkedIn rejects the whole authorization. Add more as
+    # products are approved (rw_ads for analytics, r_organization_admin for org).
+    LINKEDIN_SCOPES: str = "r_marketing_leadgen_automation"
 
     # OAuth redirect base (FastAPI server-side OAuth)
     OAUTH_REDIRECT_BASE: str = "http://localhost:8000/api/integrations"

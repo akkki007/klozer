@@ -27,6 +27,7 @@ export default function LinkedInClient({ token, role }: { token: string; role?: 
   const [busy, setBusy] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [accessPending, setAccessPending] = useState(false);
+  const [acctId, setAcctId] = useState("");
 
   const refresh = useCallback(async () => {
     const s = await api.linkedin.status(token).catch(() => null);
@@ -100,6 +101,17 @@ export default function LinkedInClient({ token, role }: { token: string; role?: 
     } finally {
       setBusy(null);
     }
+  }
+
+  function useAdAccount() {
+    const id = acctId.trim().replace(/\D/g, "");
+    if (!id) return;
+    pickOrg({
+      urn: `urn:li:sponsoredAccount:${id}`,
+      id,
+      name: `Ad account ${id}`,
+      website: null, logo: null, industry: null, followers: null,
+    });
   }
 
   async function sync() {
@@ -176,10 +188,28 @@ export default function LinkedInClient({ token, role }: { token: string; role?: 
             <FiCheckCircle style={{ color: LI_BLUE }} size={18} />
             <div style={{ flex: 1 }}>
               <strong style={{ color: "var(--fg)" }}>Connected</strong>
-              <div style={{ fontSize: 13, color: "var(--fg-muted)" }}>Select the Company Page to sync from.</div>
+              <div style={{ fontSize: 13, color: "var(--fg-muted)" }}>Choose the LinkedIn ad account to sync lead-gen leads from.</div>
             </div>
-            {isAdmin && <Btn onClick={loadOrgs} busy={busy === "orgs"}>Choose Page</Btn>}
           </Row>
+
+          {/* Manual ad-account entry — works with the Lead Sync scope alone. */}
+          {isAdmin && (
+            <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
+              <label style={{ fontSize: 12, fontWeight: 600, color: "var(--fg-muted)" }}>
+                LinkedIn Ad Account ID
+                <div style={{ display: "flex", gap: 8, marginTop: 5 }}>
+                  <input value={acctId} onChange={(e) => setAcctId(e.target.value)} placeholder="e.g. 512345678"
+                    style={{ flex: 1, padding: "9px 11px", borderRadius: 8, border: "1px solid var(--border)", background: "var(--bg)", color: "var(--fg)", fontSize: 13.5, fontFamily: "var(--font-sans)" }} />
+                  <Btn onClick={useAdAccount} busy={busy === "select"}>Use account</Btn>
+                </div>
+              </label>
+              <div style={{ fontSize: 11.5, color: "var(--fg-faint)" }}>
+                Find it in LinkedIn Campaign Manager (the number in the URL / Account settings).
+                <br />Or, once the Community Management API is approved, <button onClick={loadOrgs} disabled={busy === "orgs"} style={{ background: "none", border: "none", color: LI_BLUE, cursor: "pointer", padding: 0, fontSize: 11.5, textDecoration: "underline" }}>auto-list your Pages</button>.
+              </div>
+            </div>
+          )}
+
           {orgs && (
             <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
               {orgs.length === 0 && <div style={{ fontSize: 13, color: "var(--fg-faint)" }}>No admin Pages found on this account.</div>}
