@@ -1,17 +1,40 @@
 from contextlib import asynccontextmanager
+from pathlib import Path
+
+from alembic.config import Config as AlembicConfig
+from alembic.runtime.migration import MigrationContext
+from alembic.script import ScriptDirectory
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.database import engine, Base
-import app.models  # noqa: F401 — ensure all models are imported before create_all
+from app.database import engine
+import app.models  # noqa: F401 — ensure all models are imported before mappers are configured
 from app.routers import auth, leads, integrations, webhooks, users, dashboard, audit, notifications, whatsapp, linkedin
+
+ALEMBIC_INI = Path(__file__).resolve().parent.parent / "alembic.ini"
+
+
+def _check_current_revision(sync_conn) -> None:
+    """Refuse to boot against a database whose schema doesn't match the
+    latest migration. The API used to fall back to `Base.metadata.create_all`,
+    which silently created any missing tables while leaving pre-existing
+    tables un-altered — masking pending migrations until a route touching
+    the missing column crashed at request time.
+    """
+    current = MigrationContext.configure(sync_conn).get_current_revision()
+    head = ScriptDirectory.from_config(AlembicConfig(str(ALEMBIC_INI))).get_current_head()
+    if current != head:
+        raise RuntimeError(
+            f"Database schema is out of date (current={current!r}, head={head!r}). "
+            "Run `alembic upgrade head` in apps/api before starting the API."
+        )
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+        await conn.run_sync(_check_current_revision)
     yield
     await engine.dispose()
 
